@@ -52,7 +52,7 @@ class Mail < ActiveRecord::Base
     
     mails = find(:all, 
       :limit => options[:limit], 
-      :conditions => ["locked = ? and tries < maximum_tries", false], 
+      :conditions => ["(locked = ? and tries < maximum_tries) or (locked = ? and tries < maximum_tries and updated_at < ?)", false, true, 10.minutes.ago], 
       :order => "priority asc, created_at asc"
     )
     

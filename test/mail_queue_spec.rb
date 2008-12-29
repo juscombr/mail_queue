@@ -104,6 +104,37 @@ describe "mail_queue" do
     end
   end
   
+  describe "locked with error" do
+    before(:each) do
+      Mail.delete_all
+      @mails = Array.new(10) { create_mail }
+    end
+    
+    it "should process locked mails after 10 minutes" do
+      Mail.update_all ["locked = ?, updated_at = ?", true, 11.minutes.ago]
+      Mail.process
+      Mail.count.should == 0
+    end
+    
+    it "should not process locked mails before 10 minutes" do
+      Mail.update_all ["locked = ?, updated_at = ?", true, 9.minutes.ago]
+      Mail.process
+      Mail.count.should == 10
+    end
+    
+    it "should not process locked mails that reached maximum tries" do
+      Mail.update_all ["locked = ?, updated_at = ?, tries = 3, maximum_tries = 3", true, 15.minutes.ago]
+      Mail.process
+      Mail.count.should == 10
+    end
+    
+    it "should process locked mails that didn't reach maximum tries" do
+      Mail.update_all ["locked = ?, updated_at = ?, tries = 1, maximum_tries = 3", true, 15.minutes.ago]
+      Mail.process
+      Mail.count.should == 0
+    end
+  end
+  
   describe "tries" do
     before(:each) do
       Mail.delete_all
