@@ -7,7 +7,7 @@ require "ruby-debug"
 
 ActiveRecord::Base.configurations = {'test' => {:adapter => 'sqlite3', :database => ":memory:"}}
 ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations["test"])
-ActiveRecord::Base.logger = Logger.new(Rails.root + '/log/plugin.log')
+ActiveRecord::Base.logger = Logger.new(RAILS_ROOT + '/log/plugin.log')
 
 load(File.dirname(__FILE__) + '/schema.rb')
 
