@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] = "test"
 
-require File.expand_path("../../../../config/environment")
+require File.expand_path(File.dirname(__FILE__) + "/../../../../config/environment")
 require "spec"
 require "spec/rails"
 require "ruby-debug"
@@ -9,7 +9,7 @@ ActiveRecord::Base.configurations = {'test' => {:adapter => 'sqlite3', :database
 ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations["test"])
 ActiveRecord::Base.logger = Logger.new(Rails.root + '/log/plugin.log')
 
-load('schema.rb')
+load(File.dirname(__FILE__) + '/schema.rb')
 
 Spec::Runner.configure do |config|
   config.use_transactional_fixtures = true

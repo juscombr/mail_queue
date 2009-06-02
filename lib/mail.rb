@@ -31,12 +31,14 @@ class Mail < ActiveRecord::Base
     }.merge(options)
     
     options[:data] = options[:data].to_yaml if options[:data] 
-    
+
     create!(
       :subject => tmail.subject,
       :body => tmail.body,
       :from => tmail.from.join(","),
       :to => tmail.to.join(","),
+      :cc => tmail.cc.to_a.join(","),
+      :bcc => tmail.bcc.to_a.join(","),
       :content_type => tmail.content_type,
       :charset => tmail.type_param("charset") || ActionMailer::Base.default_charset,
       :priority => options[:priority],
@@ -81,11 +83,13 @@ class Mail < ActiveRecord::Base
     mail.body = body
     mail.from = from.split(",")
     mail.to = to.split(",")
+    mail.cc = cc.split(",") unless cc.blank?
+    mail.bcc = bcc.split(",") unless bcc.blank?
     mail.charset = charset
     mail.content_type = content_type
 
     Mailer.deliver(mail)
-  rescue
+  rescue Exception
     false
   end
 

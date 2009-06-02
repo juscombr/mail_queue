@@ -1,4 +1,4 @@
-require "spec_helper"
+require File.dirname(__FILE__)+"/spec_helper"
 
 # unset models used for testing purposes
 Object.unset_class('User')
@@ -13,6 +13,8 @@ class Mailer < ActionMailer::Base
     subject     "Activate your account"
     from        "sender@example.com"
     recipients  "recipient@example.com"
+    cc          "cc-recipient@example.com"
+    bcc         "bcc-recipient@example.com"
   end
   
   def newsletter
@@ -35,6 +37,14 @@ describe "mail_queue" do
   it "should set a recipient" do
     @mail.to.should == "recipient@example.com"
   end
+
+  it "should set cc recipients" do
+    @mail.cc.should == "cc-recipient@example.com"
+  end
+  
+  it "should set bcc recipients" do
+    @mail.bcc.should == "bcc-recipient@example.com"
+  end
   
   it "should set sender" do
     @mail.from.should == "sender@example.com"
@@ -56,7 +66,11 @@ describe "mail_queue" do
   it "should deliver mail" do
     @mail.deliver!
     ActionMailer::Base.deliveries.size.should == 1
-    ActionMailer::Base.deliveries.first.subject.should == "Activate your account"
+    delivered_mail = ActionMailer::Base.deliveries.first
+    delivered_mail.subject.should == "Activate your account"
+    delivered_mail.to.should == ["recipient@example.com"]
+    delivered_mail.cc.should == ["cc-recipient@example.com"]
+    delivered_mail.bcc.should == ["bcc-recipient@example.com"]
   end
   
   it "should respect priority" do
