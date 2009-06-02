@@ -126,8 +126,8 @@ MAINTAINER
 
 * Nando Vieira (<http://simplesideias.com.br>)
 
-COLLABORATORS
--------------
+CONTRIBUTORS
+------------
 
 * Akshay Rawat (<http://github.com/akshayrawat>)
 * Julio Monteiro (<http://github.com/jmonteiro>)
