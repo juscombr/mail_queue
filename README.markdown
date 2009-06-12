@@ -11,7 +11,7 @@ INSTALATION
     class CreateMails < ActiveRecord::Migration
       def self.up
         create_table :mails do |t|
-          t.string :subject, :from, :to, :charset, :content_type
+          t.string :subject, :from, :to, :cc, :bcc, :charset, :content_type
           t.text :body, :data
           t.boolean :locked, :default => false, :null => false
           t.integer :priority, :default => 3, :null => false
